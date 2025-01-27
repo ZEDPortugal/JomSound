@@ -1,0 +1,108 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Michroma&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+body {
+    
+    overflow-x: hidden;
+    scroll-behavior: smooth; /* Smooth scrolling as the base */
+}
+
+
+/* Keyframes for animations */
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fade-right {
+    from {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Animation utilities */
+.animate-fade-in {
+    animation: fade-in 0.5s ease-in-out forwards;
+}
+
+.animate-fade-right {
+    animation: fade-right 0.5s ease-in-out forwards;
+}
+
+/* Opacity utility */
+.opacity-0 {
+    opacity: 10;
+}
+
+/* Custom scrollbar styling */
+::-webkit-scrollbar {
+    width: 8px; /* Width of the scrollbar */
+    height: 8px; /* Height of the scrollbar for horizontal scrolling */
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.5); /* Gray color with low opacity */
+    border-radius: 10px; /* Rounded corners */
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.7); /* Slightly darker gray when hovered */
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1); /* Subtle dark track background */
+    border-radius: 10px;
+}
+
+@keyframes fade-in {
+    0% {
+      background: #ff3d3d34;
+      transform: translateY(3px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .animate-fade-in {
+    animation: fade-in 1s ease-out forwards;
+  }
+  
+  .animate-fade-in.delay-1 {
+    animation-delay: 0.2s;
+  }
+  
+  .animate-fade-in.delay-2 {
+    animation-delay: 0.4s;
+  }
+  
+  .animate-fade-in.delay-3 {
+    animation-delay: 0.6s;
+  }
+  
+  .animate-fade-in.delay-4 {
+    animation-delay: 0.8s;
+  }
+  
+  .animate-fade-in.delay-5 {
+    animation-delay: 1s;
+  }
+  
+  .animate-fade-in.delay-6 {
+    animation-delay: 1.2s;
+  }
+  
