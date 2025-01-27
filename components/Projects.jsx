@@ -185,7 +185,7 @@ const Projects = ({ isLight }) => {
                     key={uniqueKey}
                     className={`audio-card px-4 mb-4 ${isLight ? 'text-black' : 'text-white'} transition-colors duration-500 cursor-pointer ${inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'} transition-all duration-700 ease-in-out`}
                   >
-                    <div className="audio-player flex items-center">
+                    <div className="audio-player flex items-center justify-center relative">
                       <button
                         onClick={() => togglePlay(catIndex, index)}
                         className={`play-button ${isLight ? 'text-black' : 'text-white'} hover:text-red-500 transition-colors duration-300`}
