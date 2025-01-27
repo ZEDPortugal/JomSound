@@ -190,7 +190,7 @@ const Projects = ({ isLight }) => {
                         onClick={() => togglePlay(catIndex, index)}
                         className={`play-button ${isLight ? 'text-black' : 'text-white'} hover:text-red-500 transition-colors duration-300`}
                       >
-                        {isAudioLoading[uniqueKey] ? <FaSpinner className="animate-spin" /> : (isPlaying === uniqueKey ? <FaPause /> : <FaPlay />)}
+                        {isAudioLoading[uniqueKey] ? <FaSpinner className="animate-spin text-[#f00]" /> : (isPlaying === uniqueKey ? <FaPause /> : <FaPlay />)}
                       </button>
                       <div
                         id={`waveform-${uniqueKey}`}
