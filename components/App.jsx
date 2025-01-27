@@ -5,6 +5,7 @@ import About from './About';
 import Projects from './Projects';
 import ChatBot from './ChatBot';
 
+
 const App = () => {
   const [isLight, setIsLight] = useState(false);
 
@@ -18,6 +19,7 @@ const App = () => {
       <About isLight={isLight} />
       <Projects isLight={isLight} />
       <ChatBot isLight={isLight} />
+
     </div>
   );
 };

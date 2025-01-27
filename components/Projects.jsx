@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
-import { FaPlay, FaPause } from 'react-icons/fa';
+import { FaPlay, FaPause, FaSpinner } from 'react-icons/fa'; // Import FaSpinner for loading icon
 import WaveSurfer from 'wavesurfer.js';
 
 const Projects = ({ isLight }) => {
@@ -38,11 +38,13 @@ const Projects = ({ isLight }) => {
   const [isPlaying, setIsPlaying] = useState(null); // Track playing state for each audio
 
   const waveSurferInstances = useRef({}); // Store WaveSurfer instances
+  const [isAudioLoading, setIsAudioLoading] = useState({}); // Track loading state for each audio
 
   useEffect(() => {
     audioFiles.forEach((category, catIndex) => {
       category.files.forEach((audio, index) => {
         const uniqueKey = `${catIndex}-${index}`;
+        setIsAudioLoading((prev) => ({ ...prev, [uniqueKey]: true })); // Set loading state to true initially
         const waveSurfer = WaveSurfer.create({
           container: `#waveform-${uniqueKey}`,
           waveColor: isLight ? '#000' : '#fff', // Background waveform color
@@ -57,6 +59,10 @@ const Projects = ({ isLight }) => {
         });
         waveSurfer.load(audio.src);
         waveSurferInstances.current[uniqueKey] = waveSurfer;
+
+        waveSurfer.on('ready', () => {
+          setIsAudioLoading((prev) => ({ ...prev, [uniqueKey]: false })); // Set loading state to false when ready
+        });
 
         waveSurfer.on('seek', (progress) => {
           if (audioRefs.current[uniqueKey]) {
@@ -184,7 +190,7 @@ const Projects = ({ isLight }) => {
                         onClick={() => togglePlay(catIndex, index)}
                         className={`play-button ${isLight ? 'text-black' : 'text-white'} hover:text-red-500 transition-colors duration-300`}
                       >
-                        {isPlaying === uniqueKey ? <FaPause /> : <FaPlay />}
+                        {isAudioLoading[uniqueKey] ? <FaSpinner className="animate-spin" /> : (isPlaying === uniqueKey ? <FaPause /> : <FaPlay />)}
                       </button>
                       <div
                         id={`waveform-${uniqueKey}`}
