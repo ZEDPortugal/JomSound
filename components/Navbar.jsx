@@ -67,13 +67,15 @@ function Navbar({ isLight, handleToggle }) {
             >
               Projects
             </li>
+
+            
           </ul>
 
 
           
         </div>
 
-        <div className="day-night ml-[-580px] hidden md:flex">
+        <div className="day-night hidden md:flex">
           <button
             onClick={handleToggle}
             className={`p-2 rounded-full font-semibold hover:text-[#ff2020] duration-500 ${
@@ -87,6 +89,7 @@ function Navbar({ isLight, handleToggle }) {
             )}
           </button>
         </div>
+
 
 
 

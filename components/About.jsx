@@ -15,8 +15,8 @@ const About = ({ isLight }) => {
         >
             <div className="container px-5 mx-auto py-10 font-newsCycle" style={{ fontFamily: 'Consolas, monospace' }}>
             
-                <div className="grid grid-cols-1 md:grid-cols-1 gap-6 mt-10">
-                    <div className={`p-6 rounded-lg shadow-lg ${isLight ? 'bg-white' : 'bg-[#1b1b1b]'} transition-colors duration-500 ${inView ? 'animate-fade-in delay-1' : 'opacity-0'}`} style={{ height: 'auto' }}>
+                <div className="grid grid-cols-1 md:grid-cols-2 justify-items-center mt-10">
+                    <div className={` p-6 rounded-lg shadow-lg ${isLight ? 'bg-white' : 'bg-[#1b1b1b]'} transition-colors duration-500 ${inView ? 'animate-fade-in delay-1' : 'opacity-0'}`} style={{ height: 'auto' }}>
                         <h3 className={`text-xl font-bold mb-2 ${isLight ? 'text-black' : 'text-white'} transition-colors duration-500`}>About Me</h3>
                         <div className={`border-t-2 my-2 ${isLight ? 'border-black' : 'border-white'} transition-colors duration-500 `}></div>
                         <p className={`text-sm ${isLight ? 'text-black' : 'text-white'} transition-colors duration-500`}>
@@ -25,6 +25,11 @@ The journey in the audio industry began in 2001 as a beat maker and hip-hop prod
 Privileged to collaborate with prominent radio stations, high-profile brands, and talented artists, consistently delivering creative and high-quality soundscapes that bring ideas to life.
                         </p>
                     </div>
+                    <img
+          className="animate-pulse animate-once my-8 sm:my-0 animate-duration-[2000ms] relative hover:border-[#ff2020]  hover:border-4 ease-in-out duration-300 rounded-full size-64"
+          src="/image/profile.jpg"
+          alt="Profile"
+        />
                 </div>
 
 

@@ -102,20 +102,15 @@ const Home = () => {
           </a>
         </div>
 
-        <div className="max-w-[600px] p-[4%]">
+        <div className=" p-[4%]">
           {/* Hidden on desktop */}
-          <img
-            className="md:hidden border-white border-2 bg-white relative rounded-full size-24 mt-20 mb-5 "
-            src="/image/profile.jpg"
-            alt="Profile"
-          />
         {/* Main Header */}
-        <h1 className="animate-fade animate-once text-[38px] font-michroma uppercase text-[#F5F5F5]">
+        <h1 className="animate-fade animate-once flex  text-[40px] lg:text-[80px] md:text-[60px] font-michroma uppercase text-[#F5F5F5]">
             Jomz Portugal
           </h1> 
           
           {/* Rotating Text */}
-          <h3 className="text-[30px] font-michroma text-[#ff2020]">{text}|</h3>
+          <h3 className="flex  text-[30px] lg:text-[60px] md:text-[40px] font-michroma text-[#ff2020]">{text}|</h3>
           
           {/* Location Section */}
           <div className="animate-fade-up animate-once animate-duration-1000 flex items-center mt-2 border-t-2 border-[#ff2020] pt-5">
@@ -167,11 +162,7 @@ const Home = () => {
                 
         
         </div>
-        <img
-          className="animate-pulse animate-once animate-duration-[2000ms] hidden md:flex cm:left-1 lg:left-44 xl:left-80 relative hover:border-[#ff2020] border-2 hover:border-4 ease-in-out hover:rounded-full duration-300 border-[#f1f3f4] lg: left-16 rounded-full size-64"
-          src="/image/profile.jpg"
-          alt="Profile"
-        />
+
       </div>
       
     </section>
