@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Navbar from "./Navbar";
 import { FaInstagram, FaSoundcloud } from 'react-icons/fa';
 
 import {
@@ -66,8 +65,6 @@ const Home = () => {
         src="/image/bgStudio.jpg"
       ></img>
 
-
-      <Navbar />
 
       <div className=" flex items-center p-[2%] text-white h-full">
         {/* Hidden on mobile */}

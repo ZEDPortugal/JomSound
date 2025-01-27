@@ -50,11 +50,11 @@ const Projects = ({ isLight }) => {
           waveColor: isLight ? '#000' : '#fff', // Background waveform color
           progressColor: '#f00', // Progress color (red as shown)
           cursorColor: 'transparent', // No cursor visible
-          barWidth: 2, // Thin bars for the waveform
+          barWidth: 1.5, // Thin bars for the waveform
           barRadius: 2, // Slightly rounded bars
-          barGap: 1, // Space between bars
-          barMinHeight: 1, // Minimum height for small details
-          height: 50, // Height of the waveform
+          barGap: 3, // Space between bars
+          barMinHeight: 60, // Minimum height for small details
+          height: 40, // Height of the waveform
           responsive: true, // Responsive design for dynamic resizing
         });
         waveSurfer.load(audio.src);
@@ -116,6 +116,12 @@ const Projects = ({ isLight }) => {
     const uniqueKey = `${catIndex}-${index}`;
     const waveSurfer = waveSurferInstances.current[uniqueKey];
 
+    // Pause b1.mp3 if playing
+    if (isPlaying === 'circle-button-0') {
+      waveSurferInstances.current['circle-button-0'].pause();
+      setIsPlaying(null);
+    }
+
     if (waveSurfer) {
       if (isPlaying === uniqueKey) {
         waveSurfer.pause();
@@ -135,6 +141,34 @@ const Projects = ({ isLight }) => {
   };
 
   const toggleVideoPlay = (index) => {
+    // Pause current playing audio
+    if (isPlaying !== null) {
+      const [catIndex, audioIndex] = isPlaying.split('-');
+      const audioKey = `${catIndex}-${audioIndex}`;
+      if (waveSurferInstances.current[audioKey]) {
+        waveSurferInstances.current[audioKey].pause();
+      }
+      setIsPlaying(null);
+    }
+
+    // Pause b1.mp3 if playing
+    if (isPlaying === 'circle-button-0') {
+      waveSurferInstances.current['circle-button-0'].pause();
+      setIsPlaying(null);
+    }
+
+    // Pause other video if playing
+    videoRefs.current.forEach((videoRef, i) => {
+      if (i !== index && isVideoPlaying[i]) {
+        videoRef.current.pause();
+        setIsVideoPlaying((prev) => {
+          const newState = [...prev];
+          newState[i] = false;
+          return newState;
+        });
+      }
+    });
+
     if (isVideoPlaying[index]) {
       videoRefs.current[index].current.pause();
     } else {
@@ -145,6 +179,42 @@ const Projects = ({ isLight }) => {
       newState[index] = !newState[index];
       return newState;
     });
+  };
+
+  const togglePlayButton = () => {
+    // Pause current playing audio
+    if (isPlaying !== null) {
+      const [catIndex, audioIndex] = isPlaying.split('-');
+      const audioKey = `${catIndex}-${audioIndex}`;
+      if (waveSurferInstances.current[audioKey]) {
+        waveSurferInstances.current[audioKey].pause();
+      }
+      setIsPlaying(null);
+    }
+
+    // Pause all videos
+    videoRefs.current.forEach((videoRef, i) => {
+      if (isVideoPlaying[i]) {
+        videoRef.current.pause();
+        setIsVideoPlaying((prev) => {
+          const newState = [...prev];
+          newState[i] = false;
+          return newState;
+        });
+      }
+    });
+
+    // Toggle play/pause for the button
+    const waveSurfer = waveSurferInstances.current['circle-button-0'];
+    if (waveSurfer) {
+      if (isPlaying === 'circle-button-0') {
+        waveSurfer.pause();
+        setIsPlaying(null);
+      } else {
+        waveSurfer.play();
+        setIsPlaying('circle-button-0');
+      }
+    }
   };
 
   // Update video progress state when video time updates
@@ -167,17 +237,17 @@ const Projects = ({ isLight }) => {
   };
 
   return (
-    <section id="projects" className={`projects-section ${isLight ? 'bg-[#e5e5e5]' : 'bg-[#080808]'} transition-colors duration-500`}>
+    <section id="projects" className={`projects-section ${isLight ? 'bg-[#e5e5e5]' : 'bg-[#070707]'} transition-colors duration-500`}>
       <div className={`container mx-auto py-5 font-newsCycle ${isLight ? 'text-black' : 'text-white'}`} style={{ fontFamily: 'Consolas, monospace' }}>
         <h2 className={`p-10 text-3xl font-bold mb-4 pb-5 ${isLight ? 'text-black' : 'text-white'} transition-colors duration-500`}>
           Audio
         </h2>
         {audioFiles.map((category, catIndex) => (
-          <div key={catIndex} className={`category-section shadow-md mx-5 sm:mx-4 ${isLight ? 'bg-white' : 'bg-[#000000]'} mb-10 pb-10 pt-2 rounded-2xl`}>
+          <div key={catIndex} className={`category-section shadow-md mx-5 sm:mx-4 ${isLight ? 'bg-white' : 'bg-[#121212]'} mb-10 pb-10 pt-2 rounded-2xl`}>
             <h3 className={`text-2xl font-bold ml-12 ${isLight ? 'text-black' : 'text-white'} transition-colors duration-500`}>
               {category.category}
             </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 item lg:grid-cols-2 gap-4 sm:px-10 px-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-2 gap-4 sm:px-10 px-3">
               {category.files.map((audio, index) => {
                 const uniqueKey = `${catIndex}-${index}`;
                 return (
@@ -210,7 +280,7 @@ const Projects = ({ isLight }) => {
         </h2>
 
         {/* Featured Video Section */}
-        <div className={`category-section shadow-md mx-5 sm:mx-4 pb-40 ${isLight ? 'bg-white' : 'bg-[#000000]'} mb-10 pb-10 pt-2 rounded-2xl`}>
+        <div className={`category-section shadow-md mx-5 sm:mx-4 pb-40 ${isLight ? 'bg-white' : 'bg-[#121212]'} mb-10 pb-10 pt-2 rounded-2xl`}>
           <h3 className={`text-2xl font-bold mb-4 ml-12 ${isLight ? 'text-black' : 'text-white'} transition-colors duration-500`}>
             TV Commercial
           </h3>
@@ -326,7 +396,7 @@ const Projects = ({ isLight }) => {
       </div>
       <div className="relative justify-items-center grid pb-10">
         <button
-          onClick={() => togglePlay('circle-button', 0)}
+          onClick={togglePlayButton}
           className="bg-red-500 text-white p-4 rounded-full shadow-lg hover:bg-red-600 transition-colors duration-300"
         >
           {isPlaying === 'circle-button-0' ? <FaPause /> : <FaPlay />}

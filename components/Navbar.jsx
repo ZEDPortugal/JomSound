@@ -44,7 +44,7 @@ function Navbar({ isLight, handleToggle }) {
   return (
     <nav className={`animate-fade-down animate-once animate-duration-[200ms] flex w-full h-20 shadow-xl fixed top-0 left-0 z-10 opacity-50 ${isLight ? 'bg-white' : 'bg-black'}`}>
       <div className={`flex justify-between items-center h-full w-full px-4 2xl:px-16 opacity-80 hover:opacity-100 ease-in-out duration-200 ${isLight ? 'bg-white' : 'bg-black'}`}>
-        <div className={`${isLight ? 'text-black' : 'text-white'} ease-in-out duration-1000 font-michroma font-bold text-3xl`}>JomSound</div>
+        <div onClick={() => scrollToSection('#home')} className={`${isLight ? 'text-black' : 'text-white'} ease-in-out hover:text-red-500 duration-1000 font-michroma font-bold text-3xl`}>JomSound</div>
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex font-michroma text-base mr-6">
