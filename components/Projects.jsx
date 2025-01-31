@@ -14,7 +14,7 @@ const Projects = ({ isLight }) => {
 
   const audioFiles = [
     { category: 'Radio Imaging', files: [
-      { title: 'Radio Imaging 1', src: '/audio/JomSound%20Radio%20Imaging%20Demo%202025_01.mp3' },
+      { title: 'Radio Imaging 1', src: '/audio/JOMSOUND%20FINAL%20MIX%202.wav' },
       { title: 'Radio Imaging 2', src: '/audio/Radio%20Imaging%20Reel.wav' },
     ]},
     { category: 'Radio Commercials', files: [
