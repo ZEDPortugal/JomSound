@@ -1,13 +1,58 @@
-import React, { useState, useRef, useEffect, useCallback, memo } from 'react';
+import React, { useState, useRef, useEffect, useCallback, memo, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { FaPlay, FaPause, FaSpinner, FaVolumeUp, FaVideo } from 'react-icons/fa';
 import { HiMusicNote } from 'react-icons/hi';
-import WaveSurfer from 'wavesurfer.js';
 import { AUDIO_CATEGORIES, VIDEO_FILES } from '../constants';
 
-const AudioPlayer = memo(({ audio, uniqueKey, isPlaying, isLoading, onToggle, index }) => {
+// Generate stable pseudo-random heights for visualization bars
+const generateBarHeights = (count) => {
+  const heights = [];
+  for (let i = 0; i < count; i++) {
+    // Use sine wave pattern for a more audio-waveform-like look
+    const baseHeight = 40 + Math.sin(i * 0.5) * 20 + Math.sin(i * 0.3) * 15;
+    heights.push(Math.min(100, Math.max(30, baseHeight + (i % 3) * 10)));
+  }
+  return heights;
+};
+
+const BAR_HEIGHTS = generateBarHeights(50);
+
+// Simple progress bar component for audio - no heavy waveform rendering
+const SimpleAudioProgress = memo(({ progress, onSeek, isReady }) => {
+  const handleClick = (e) => {
+    if (!isReady || !onSeek) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const percent = ((e.clientX - rect.left) / rect.width) * 100;
+    onSeek(Math.max(0, Math.min(100, percent)));
+  };
+
+  return (
+    <div 
+      className="relative h-8 w-full cursor-pointer flex items-center"
+      onClick={handleClick}
+    >
+      {/* Background bars - static visualization */}
+      <div className="absolute inset-0 flex items-center gap-[2px]">
+        {BAR_HEIGHTS.map((height, i) => (
+          <div
+            key={i}
+            className="flex-1 rounded-sm transition-colors duration-150"
+            style={{
+              height: `${height}%`,
+              backgroundColor: progress > (i / 50) * 100 ? '#c9a962' : '#4a4a4a',
+            }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+});
+
+SimpleAudioProgress.displayName = 'SimpleAudioProgress';
+
+const AudioPlayer = memo(({ audio, uniqueKey, isPlaying, isLoading, progress, onToggle, onSeek, index }) => {
   return (
     <motion.div 
       className="group relative p-6 rounded-2xl bg-dark-card border border-dark-border hover:border-white/20 transition-all duration-300"
@@ -44,9 +89,10 @@ const AudioPlayer = memo(({ audio, uniqueKey, isPlaying, isLoading, onToggle, in
           <h3 className="text-white font-grotesk font-medium mb-2 truncate group-hover:text-gold transition-colors duration-300">
             {audio.title}
           </h3>
-          <div
-            id={'waveform-' + uniqueKey}
-            className="w-full cursor-pointer opacity-80 hover:opacity-100 transition-opacity duration-300"
+          <SimpleAudioProgress 
+            progress={progress || 0} 
+            onSeek={onSeek}
+            isReady={!isLoading}
           />
         </div>
       </div>
@@ -61,7 +107,9 @@ AudioPlayer.propTypes = {
   uniqueKey: PropTypes.string.isRequired,
   isPlaying: PropTypes.bool.isRequired,
   isLoading: PropTypes.bool.isRequired,
+  progress: PropTypes.number,
   onToggle: PropTypes.func.isRequired,
+  onSeek: PropTypes.func,
   index: PropTypes.number,
 };
 
@@ -192,89 +240,104 @@ const Projects = () => {
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.1 });
   const [currentlyPlaying, setCurrentlyPlaying] = useState(null);
   const [isAudioLoading, setIsAudioLoading] = useState({});
+  const [audioProgress, setAudioProgress] = useState({});
   const [videoProgresses, setVideoProgresses] = useState(VIDEO_FILES.map(() => 0));
   const [videoPlaying, setVideoPlaying] = useState(VIDEO_FILES.map(() => false));
-  const [isInitialized, setIsInitialized] = useState(false);
-  const waveSurferInstances = useRef({});
+  const audioRefs = useRef({});
 
-  // Lazy initialize WaveSurfer only when section is in view
+  // Clean up audio elements on unmount
   useEffect(() => {
-    if (!inView || isInitialized) return;
-    
-    setIsInitialized(true);
-    
-    AUDIO_CATEGORIES.forEach((category, catIndex) => {
-      category.files.forEach((audio, index) => {
-        const uniqueKey = catIndex + '-' + index;
-        setIsAudioLoading(prev => ({ ...prev, [uniqueKey]: true }));
-        
-        // Delay initialization to prevent blocking
-        setTimeout(() => {
-          const container = document.getElementById('waveform-' + uniqueKey);
-          if (!container) return;
-          
-          const waveSurfer = WaveSurfer.create({
-            container: '#waveform-' + uniqueKey,
-            waveColor: '#4a4a4a',
-            progressColor: '#c9a962',
-            cursorColor: 'transparent',
-            barWidth: 2,
-            barRadius: 2,
-            barGap: 2,
-            barMinHeight: 1,
-            height: 32,
-            responsive: true,
-            backend: 'MediaElement', // Use MediaElement for better performance
-            normalize: true,
-            mediaControls: false,
-            autoplay: false,
-            interact: true,
-            hideScrollbar: true,
-            fetchParams: { cache: 'force-cache' }, // Cache audio files
-          });
-          
-          waveSurfer.load(audio.src);
-          waveSurferInstances.current[uniqueKey] = waveSurfer;
-
-          waveSurfer.on('ready', () => {
-            setIsAudioLoading(prev => ({ ...prev, [uniqueKey]: false }));
-          });
-
-          waveSurfer.on('finish', () => {
-            setCurrentlyPlaying(null);
-          });
-        }, index * 100); // Stagger loading
-      });
-    });
-
     return () => {
-      Object.values(waveSurferInstances.current).forEach(ws => ws && ws.destroy());
-      waveSurferInstances.current = {};
-    };
-  }, [inView, isInitialized]);
-
-  const toggleAudio = useCallback((catIndex, index) => {
-    const uniqueKey = catIndex + '-' + index;
-    const waveSurfer = waveSurferInstances.current[uniqueKey];
-
-    if (waveSurfer) {
-      if (currentlyPlaying === uniqueKey) {
-        waveSurfer.pause();
-        setCurrentlyPlaying(null);
-      } else {
-        // Stop hero audio
-        window.dispatchEvent(new CustomEvent('otherAudioPlaying'));
-        
-        if (currentlyPlaying) {
-          const [prevCat, prevIdx] = currentlyPlaying.split('-');
-          waveSurferInstances.current[prevCat + '-' + prevIdx]?.pause();
+      Object.values(audioRefs.current).forEach(audio => {
+        if (audio) {
+          audio.pause();
+          audio.src = '';
         }
-        setVideoPlaying(VIDEO_FILES.map(() => false));
-        waveSurfer.play();
-        setCurrentlyPlaying(uniqueKey);
-      }
+      });
+      audioRefs.current = {};
+    };
+  }, []);
+
+  // Get or create audio element for a track
+  const getAudioElement = useCallback((catIndex, index, src) => {
+    const uniqueKey = catIndex + '-' + index;
+    
+    if (!audioRefs.current[uniqueKey]) {
+      const audio = new Audio();
+      audio.preload = 'metadata'; // Only load metadata initially
+      audio.src = src;
+      
+      audio.addEventListener('timeupdate', () => {
+        if (audio.duration) {
+          setAudioProgress(prev => ({
+            ...prev,
+            [uniqueKey]: (audio.currentTime / audio.duration) * 100
+          }));
+        }
+      });
+      
+      audio.addEventListener('ended', () => {
+        setCurrentlyPlaying(null);
+        setAudioProgress(prev => ({ ...prev, [uniqueKey]: 0 }));
+      });
+      
+      audio.addEventListener('canplay', () => {
+        setIsAudioLoading(prev => ({ ...prev, [uniqueKey]: false }));
+      });
+      
+      audio.addEventListener('waiting', () => {
+        setIsAudioLoading(prev => ({ ...prev, [uniqueKey]: true }));
+      });
+      
+      audio.addEventListener('playing', () => {
+        setIsAudioLoading(prev => ({ ...prev, [uniqueKey]: false }));
+      });
+      
+      audioRefs.current[uniqueKey] = audio;
     }
-  }, [currentlyPlaying]);
+    
+    return audioRefs.current[uniqueKey];
+  }, []);
+
+  const toggleAudio = useCallback((catIndex, index, src) => {
+    const uniqueKey = catIndex + '-' + index;
+    const audio = getAudioElement(catIndex, index, src);
+
+    if (currentlyPlaying === uniqueKey) {
+      audio.pause();
+      setCurrentlyPlaying(null);
+    } else {
+      // Stop hero audio
+      window.dispatchEvent(new CustomEvent('otherAudioPlaying'));
+      
+      // Pause currently playing audio
+      if (currentlyPlaying) {
+        const prevAudio = audioRefs.current[currentlyPlaying];
+        if (prevAudio) prevAudio.pause();
+      }
+      
+      // Pause all videos
+      setVideoPlaying(VIDEO_FILES.map(() => false));
+      
+      // Play new audio
+      setIsAudioLoading(prev => ({ ...prev, [uniqueKey]: true }));
+      audio.play().catch(err => {
+        console.error('Audio playback failed:', err);
+        setIsAudioLoading(prev => ({ ...prev, [uniqueKey]: false }));
+      });
+      setCurrentlyPlaying(uniqueKey);
+    }
+  }, [currentlyPlaying, getAudioElement]);
+
+  const seekAudio = useCallback((catIndex, index, percent) => {
+    const uniqueKey = catIndex + '-' + index;
+    const audio = audioRefs.current[uniqueKey];
+    
+    if (audio && audio.duration) {
+      audio.currentTime = (percent / 100) * audio.duration;
+      setAudioProgress(prev => ({ ...prev, [uniqueKey]: percent }));
+    }
+  }, []);
 
   const toggleVideo = useCallback((index) => {
     // Stop hero audio
@@ -364,7 +427,9 @@ const Projects = () => {
                       uniqueKey={uniqueKey}
                       isPlaying={currentlyPlaying === uniqueKey}
                       isLoading={isAudioLoading[uniqueKey] || false}
-                      onToggle={() => toggleAudio(catIndex, index)}
+                      progress={audioProgress[uniqueKey] || 0}
+                      onToggle={() => toggleAudio(catIndex, index, audio.src)}
+                      onSeek={(percent) => seekAudio(catIndex, index, percent)}
                       index={index}
                     />
                   );
