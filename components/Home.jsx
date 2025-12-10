@@ -179,7 +179,7 @@ const Equalizer = React.memo(() => (
 Equalizer.displayName = 'Equalizer';
 
 const useTypingEffect = (words, options = {}) => {
-  const { typingSpeed = 200, deletingSpeed = 100, pauseDuration = 100 } = options;
+  const { typingSpeed = 200, deletingSpeed = 10, pauseDuration = 100 } = options;
   const [loopNum, setLoopNum] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
   const [text, setText] = useState('');
@@ -193,18 +193,26 @@ const useTypingEffect = (words, options = {}) => {
         ? fullText.substring(0, text.length - 1)
         : fullText.substring(0, text.length + 1);
       setText(updatedText);
-      if (isDeleting) setDelta(prev => prev - 2);
+      
       if (!isDeleting && updatedText === fullText) {
+        // Finished typing, pause before deleting
         setIsDeleting(true);
         setDelta(pauseDuration);
       } else if (isDeleting && updatedText === '') {
+        // Finished deleting, move to next word
         setIsDeleting(false);
         setLoopNum(loopNum + 1);
         setDelta(typingSpeed);
+      } else if (isDeleting) {
+        // Currently deleting - use deletingSpeed
+        setDelta(deletingSpeed);
+      } else {
+        // Currently typing - use typingSpeed with slight randomness
+        setDelta(typingSpeed - Math.random() * 50);
       }
     };
-    const ticker = setInterval(tick, delta);
-    return () => clearInterval(ticker);
+    const ticker = setTimeout(tick, delta);
+    return () => clearTimeout(ticker);
   }, [text, delta, isDeleting, loopNum, words, typingSpeed, deletingSpeed, pauseDuration]);
 
   return { text, isDeleting };

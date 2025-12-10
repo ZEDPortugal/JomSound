@@ -158,7 +158,7 @@ export const HERO_CONFIG = {
   backgroundImage: '/image/bgStudio.jpg',
   roles: ['Radio Imaging', 'Sound Designer', 'Audio Engineer', 'Music Producer'],
   typingSpeed: 150,
-  deletingSpeed: 80,
+  deletingSpeed: 40,
   pauseDuration: 1500,
 };
 
