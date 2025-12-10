@@ -11,7 +11,7 @@
 export const SITE_CONFIG = {
   name: 'JomSound',
   title: 'JomSound - Professional Audio Engineering',
-  description: 'Professional sound engineer and audio producer based in Dubai',
+  description: 'Professional sound engineer and audio producer based in Manila, currently in Dubai, U.A.E',
   author: 'Jomz Portugal',
   email: 'jomz.portugal@gmail.com',
   phone: '+971 568700451',
@@ -62,7 +62,7 @@ const getYearsOfExperience = () => new Date().getFullYear() - CAREER_START_YEAR;
 export const ABOUT_INFO = {
   title: 'About Me',
   get description() {
-    return `An experienced sound engineer and audio producer based in Dubai, U.A.E with over ${getYearsOfExperience()} years of expertise in sound design, music production, and audio post-production. The journey in the audio industry began in 2001 as a beat maker and hip-hop producer, evolving into a diverse and fulfilling career spanning radio imaging, in-store radio, TV commercials, and music production. Privileged to collaborate with prominent radio stations, high-profile brands, and talented artists, consistently delivering creative and high-quality soundscapes that bring ideas to life.`;
+    return `An experienced sound engineer and audio producer based in Manila, Philippines, currently in Dubai, U.A.E, with over ${getYearsOfExperience()} years of expertise in sound design, music production, and audio post-production. The journey in the audio industry began in 2001 as a beat maker and hip-hop producer, evolving into a diverse and fulfilling career spanning radio imaging, in-store radio, TV commercials, and music production. Privileged to collaborate with prominent radio stations, high-profile brands, and talented artists, consistently delivering creative and high-quality soundscapes that bring ideas to life.`;
   },
   profileImage: '/image/profile.jpg',
 };

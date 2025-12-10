@@ -133,10 +133,17 @@ const Contacts = () => {
               />
               <ContactCard
                 icon={HiLocationMarker}
-                title="Location"
-                value="Dubai, U.A.E"
+                title="Based in"
+                value="Manila, Philippines"
                 href="#"
                 index={3}
+              />
+              <ContactCard
+                icon={HiLocationMarker}
+                title="Currently in"
+                value="Dubai, U.A.E"
+                href="#"
+                index={4}
               />
             </div>
           </motion.div>
