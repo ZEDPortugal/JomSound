@@ -416,7 +416,7 @@ const Home = () => {
           transition={{ delay: 0.8 }}
         >
           <span className="text-gray-400 text-xs sm:text-sm md:text-base tracking-[0.15em] md:tracking-[0.2em] uppercase">
-            A {text}
+          {text}
             <motion.span 
               className="text-white ml-1"
               animate={{ opacity: [1, 0, 1] }}
