@@ -96,12 +96,12 @@ const VideoPlayer = ({ video, index, isPlaying, progress, onToggle, onSeek }) =>
 
   return (
     <motion.div 
-      className="group relative rounded-2xl overflow-hidden bg-dark-card border border-dark-border hover:border-white/20 transition-all duration-500"
+      className="group relative rounded-2xl overflow-hidden bg-dark-card border border-dark-border hover:border-white/20 transition-all duration-300"
       initial={{ opacity: 0, scale: 0.95 }}
       whileInView={{ opacity: 1, scale: 1 }}
-      viewport={{ once: false }}
-      transition={{ delay: index * 0.15, type: 'spring', stiffness: 100 }}
-      whileHover={{ y: -5, boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3)' }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.1, type: 'spring', stiffness: 100, damping: 20 }}
+      whileHover={{ y: -5 }}
     >
       <div className="relative aspect-video">
         <video
@@ -226,6 +226,11 @@ const Projects = () => {
             responsive: true,
             backend: 'MediaElement', // Use MediaElement for better performance
             normalize: true,
+            mediaControls: false,
+            autoplay: false,
+            interact: true,
+            hideScrollbar: true,
+            fetchParams: { cache: 'force-cache' }, // Cache audio files
           });
           
           waveSurfer.load(audio.src);
@@ -302,33 +307,22 @@ const Projects = () => {
       {/* Bottom fade boundary */}
       <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-dark-bg to-transparent z-10 pointer-events-none" />
       
-      <motion.div 
-        className="absolute top-1/4 left-0 w-72 h-72 bg-gold/5 rounded-full blur-[150px]"
-        animate={{ scale: [1, 1.3, 1] }}
-        transition={{ duration: 8, repeat: Infinity }}
-      />
-      <motion.div 
-        className="absolute bottom-1/4 right-0 w-96 h-96 bg-gold/5 rounded-full blur-[150px]"
-        animate={{ scale: [1.3, 1, 1.3] }}
-        transition={{ duration: 6, repeat: Infinity }}
-      />
+      {/* Static ambient glows - no animation for performance */}
+      <div className="absolute top-1/4 left-0 w-72 h-72 bg-gold/5 rounded-full blur-[80px] opacity-60" />
+      <div className="absolute bottom-1/4 right-0 w-96 h-96 bg-gold/5 rounded-full blur-[80px] opacity-60" />
 
       <div className="container mx-auto px-6 relative z-10">
         <motion.div 
           className="mb-20"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false }}
-          transition={{ type: 'spring', stiffness: 100 }}
+          viewport={{ once: true }}
+          transition={{ type: 'spring', stiffness: 100, damping: 20 }}
         >
           <div className="flex items-center gap-4 mb-8">
-            <motion.div 
-              className="p-3 rounded-xl bg-gold/10 border border-gold/20"
-              whileHover={{ rotate: [0, -10, 10, 0], scale: 1.1 }}
-              transition={{ duration: 0.4 }}
-            >
+            <div className="p-3 rounded-xl bg-gold/10 border border-gold/20">
               <FaVolumeUp className="text-2xl text-gold" />
-            </motion.div>
+            </div>
             <div>
               <h2 className="font-grotesk text-3xl md:text-4xl font-bold text-white">
                 Audio <span className="text-gold">Projects</span>
@@ -343,16 +337,11 @@ const Projects = () => {
               className="mb-10"
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: false }}
-              transition={{ delay: catIndex * 0.1, type: 'spring', stiffness: 100 }}
+              viewport={{ once: true }}
+              transition={{ delay: catIndex * 0.1, type: 'spring', stiffness: 100, damping: 20 }}
             >
               <div className="flex items-center gap-3 mb-6">
-                <motion.div
-                  animate={{ rotate: [0, 360] }}
-                  transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
-                >
-                  <HiMusicNote className="text-gold" />
-                </motion.div>
+                <HiMusicNote className="text-gold" />
                 <h3 className="font-grotesk text-xl font-semibold text-white">
                   {category.category}
                 </h3>
@@ -360,7 +349,7 @@ const Projects = () => {
                   className="flex-1 h-px bg-gradient-to-r from-gold/30 to-transparent"
                   initial={{ scaleX: 0 }}
                   whileInView={{ scaleX: 1 }}
-                  viewport={{ once: false }}
+                  viewport={{ once: true }}
                   transition={{ delay: 0.3, duration: 0.5 }}
                 />
               </div>
@@ -388,17 +377,13 @@ const Projects = () => {
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false }}
-          transition={{ type: 'spring', stiffness: 100 }}
+          viewport={{ once: true }}
+          transition={{ type: 'spring', stiffness: 100, damping: 20 }}
         >
           <div className="flex items-center gap-4 mb-8">
-            <motion.div 
-              className="p-3 rounded-xl bg-gold/10 border border-gold/20"
-              whileHover={{ rotate: [0, -10, 10, 0], scale: 1.1 }}
-              transition={{ duration: 0.4 }}
-            >
+            <div className="p-3 rounded-xl bg-gold/10 border border-gold/20">
               <FaVideo className="text-2xl text-gold" />
-            </motion.div>
+            </div>
             <div>
               <h2 className="font-grotesk text-3xl md:text-4xl font-bold text-white">
                 Video <span className="text-gold">Projects</span>
@@ -426,18 +411,15 @@ const Projects = () => {
           className="mt-16 text-center"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false }}
-          transition={{ delay: 0.3, type: 'spring', stiffness: 100 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.2, type: 'spring', stiffness: 100, damping: 20 }}
         >
-          <motion.div 
-            className="inline-block px-8 py-6 rounded-2xl glass border border-gold/20"
-            whileHover={{ scale: 1.02, boxShadow: '0 10px 30px rgba(201, 169, 98, 0.1)' }}
-          >
+          <div className="inline-block px-8 py-6 rounded-2xl glass border border-gold/20 hover:scale-[1.02] transition-transform duration-300">
             <p className="text-gray-400 italic font-sans">
               ...and many more! If you have been to a store or listened to the radio in the Philippines, 
               <span className="text-gold font-medium"> you have probably already heard my work.</span>
             </p>
-          </motion.div>
+          </div>
         </motion.div>
       </div>
     </section>

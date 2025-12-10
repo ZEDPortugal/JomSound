@@ -17,66 +17,80 @@ const throttle = (func, limit) => {
   };
 };
 
-// Animated Waveform Background Component
+// Animated Waveform Background Component - Optimized for performance
 const WaveformBackground = React.memo(() => {
   const canvasRef = useRef(null);
   const animationRef = useRef(null);
+  const lastFrameTime = useRef(0);
+  const FPS_LIMIT = 30; // Limit to 30fps for better performance
+  const frameInterval = 1000 / FPS_LIMIT;
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', { alpha: true });
     let width = canvas.width = window.innerWidth;
     let height = canvas.height = window.innerHeight;
 
+    // Throttle resize handler
+    let resizeTimeout;
     const handleResize = () => {
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+      }, 100);
     };
-    window.addEventListener('resize', handleResize);
+    window.addEventListener('resize', handleResize, { passive: true });
+
+    // Pre-calculate constants
+    const bars = 60; // Reduced from 80
+    const hue = 40;
+    const saturation = 60;
+    const lightness = 55;
+    const alpha = 0.35;
 
     // Generate smoothly animated waveform pattern
     const generateWaveform = (time) => {
-      const bars = 80;
-      const data = new Array(bars).fill(0).map((_, i) => {
-        // Create a smooth, slowly moving audio-like waveform pattern
-        const wave1 = Math.sin(i * 0.3 + time * 0.5) * 40;
-        const wave2 = Math.sin(i * 0.15 + time * 0.3) * 25;
-        const wave3 = Math.cos(i * 0.2 + time * 0.4) * 20;
-        const wave4 = Math.sin(i * 0.5 + time * 0.2) * 15;
-        return Math.abs(wave1 + wave2 + wave3 + wave4) + 20;
-      });
+      const data = new Array(bars);
+      for (let i = 0; i < bars; i++) {
+        const wave1 = Math.sin(i * 0.3 + time * 0.3) * 40; // Slower animation
+        const wave2 = Math.sin(i * 0.15 + time * 0.2) * 25;
+        const wave3 = Math.cos(i * 0.2 + time * 0.25) * 20;
+        data[i] = Math.abs(wave1 + wave2 + wave3) + 20;
+      }
       return data;
     };
 
     const draw = (timestamp) => {
+      // Frame rate limiting
+      const elapsed = timestamp - lastFrameTime.current;
+      if (elapsed < frameInterval) {
+        animationRef.current = requestAnimationFrame(draw);
+        return;
+      }
+      lastFrameTime.current = timestamp - (elapsed % frameInterval);
+
       ctx.clearRect(0, 0, width, height);
 
-      const time = timestamp / 1000; // Convert to seconds for smoother animation
+      const time = timestamp / 1000;
       const data = generateWaveform(time);
-      const barCount = data.length;
-      const barWidth = width / barCount;
+      const barWidth = width / bars;
       const centerY = height / 2;
 
-      // Draw waveform bars
+      // Batch draw operations
+      ctx.beginPath();
       data.forEach((value, index) => {
         const barHeight = value * 2;
         const x = index * barWidth;
-        const hue = 40; // Gold hue
-        const saturation = 60;
-        const lightness = 55;
-        const alpha = 0.35;
 
-        // Create gradient for each bar
         const gradient = ctx.createLinearGradient(x, centerY - barHeight, x, centerY + barHeight);
         gradient.addColorStop(0, `hsla(${hue}, ${saturation}%, ${lightness}%, 0)`);
         gradient.addColorStop(0.5, `hsla(${hue}, ${saturation}%, ${lightness}%, ${alpha})`);
         gradient.addColorStop(1, `hsla(${hue}, ${saturation}%, ${lightness}%, 0)`);
 
         ctx.fillStyle = gradient;
-        
-        // Draw mirrored bars from center
         ctx.fillRect(x, centerY - barHeight, barWidth - 2, barHeight * 2);
       });
 
@@ -87,6 +101,7 @@ const WaveformBackground = React.memo(() => {
 
     return () => {
       window.removeEventListener('resize', handleResize);
+      clearTimeout(resizeTimeout);
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
@@ -97,7 +112,7 @@ const WaveformBackground = React.memo(() => {
     <canvas
       ref={canvasRef}
       className="absolute inset-0 w-full h-full pointer-events-none z-0"
-      style={{ opacity: 0.6 }}
+      style={{ opacity: 0.6, willChange: 'transform' }}
     />
   );
 });
@@ -146,11 +161,12 @@ const Equalizer = React.memo(() => (
       <motion.div
         key={i}
         className="w-0.5 bg-gold rounded-full"
+        style={{ willChange: 'height' }}
         animate={{
           height: ['4px', '16px', '4px'],
         }}
         transition={{
-          duration: 0.6,
+          duration: 0.8, // Slightly slower for smoother feel
           repeat: Infinity,
           delay: i * 0.12,
           ease: 'easeInOut',
@@ -209,6 +225,7 @@ const useAudioPlayer = (audioSrc) => {
     audioRef.current = new Audio(audioSrc);
     audioRef.current.volume = baseVolume;
     audioRef.current.loop = false;
+    audioRef.current.preload = 'metadata'; // Only load metadata initially for faster page load
 
     const handleTimeUpdate = () => {
       if (audioRef.current) {
@@ -333,11 +350,9 @@ const Home = () => {
       {/* Subtle gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-br from-dark-bg via-dark-card/30 to-dark-bg z-[1]" />
       
-      {/* Subtle gold ambient glow */}
-      <motion.div 
-        className="absolute top-1/4 right-1/4 w-96 h-96 bg-gold/5 rounded-full blur-[200px] z-[1]"
-        animate={{ opacity: [0.3, 0.5, 0.3], scale: [1, 1.1, 1] }}
-        transition={{ duration: 8, repeat: Infinity }}
+      {/* Subtle gold ambient glow - static for performance */}
+      <div 
+        className="absolute top-1/4 right-1/4 w-96 h-96 bg-gold/5 rounded-full blur-[100px] z-[1] opacity-40"
       />
       
       {/* Left side - Social links - Hidden on mobile */}
@@ -360,11 +375,7 @@ const Home = () => {
         transition={{ delay: 1 }}
       >
         <span className="text-gray-500 text-xs tracking-widest vertical-text">SOUND ENGINEER</span>
-        <motion.div 
-          className="w-px h-16 bg-gradient-to-b from-gray-500 to-transparent"
-          animate={{ scaleY: [1, 0.5, 1] }}
-          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-        />
+        <div className="w-px h-16 bg-gradient-to-b from-gray-500 to-transparent" />
       </motion.div>
 
       {/* Main content - Center */}
