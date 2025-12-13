@@ -62,7 +62,7 @@ const getYearsOfExperience = () => new Date().getFullYear() - CAREER_START_YEAR;
 export const ABOUT_INFO = {
   title: 'About Me',
   get description() {
-    return `An experienced sound engineer and audio producer based in Manila, Philippines, currently in Dubai, U.A.E, with over ${ getYearsOfExperience()} years of expertise in sound design, mu sic production, and audio post-production. The journey in the a udio industry began in 2001 as a beat maker and hip-hop produc er, evolving into a diverse and fulfilling career spanning r adio imaging, in-store radio, TV commercials, and music producti on. Privileged to collaborate with prominent radio stations, hig h-profile brands, and talented artists, consistently delivering creative and high-quality soundscapes that bring ideas to life.`;
+    return `An experienced sound engineer and audio producer based in Manila, Philippines, currently in Dubai, U.A.E, with over ${ getYearsOfExperience()} years of expertise in sound design, music production, and audio post-production. The journey in the a udio industry began in 2001 as a beat maker and hip-hop produc er, evolving into a diverse and fulfilling career spanning r adio imaging, in-store radio, TV commercials, and music producti on. Privileged to collaborate with prominent radio stations, hig h-profile brands, and talented artists, consistently delivering creative and high-quality soundscapes that bring ideas to life.`;
   },
   profileImage: '/image/profile.jpg',
 };
@@ -156,7 +156,7 @@ export const VIDEO_FILES = [
 
 export const HERO_CONFIG = {
   backgroundImage: '/image/bgStudio.jpg',
-  roles: ['Radio Imaging', 'Sound Designer', 'Audio Engineer', 'Music Producer'],
+  roles: ['Sound Designer', 'Audio Engineer'],
   typingSpeed: 150,
   deletingSpeed: 40,
   pauseDuration: 1500,
