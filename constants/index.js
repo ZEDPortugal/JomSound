@@ -62,12 +62,7 @@ const getYearsOfExperience = () => new Date().getFullYear() - CAREER_START_YEAR;
 export const ABOUT_INFO = {
   title: 'About Me',
   get description() {
-    return `A seasoned Sound Engineer and Audio Producer from Manila, Philippines—now based in Dubai, U.A.E. with 19 years of professional audio engineering experience.
-Beginning in 2001 as a beat maker and hip-hop producer, the career expanded into sound design, music production, radio imaging, radio commercials, jingles, and audio for TV commercials.
-
-Trusted by major private companies, big brands in the Philippines, and the Philippine government, delivering sound identities that elevate campaigns and broadcast content. Experience includes sound design and radio imaging for national government agencies, along with long-term collaborations with leading commercial radio stations, retail chains, and top consumer brands.
-
-Known for producing creative, high-impact, and polished audio, consistently bringing concepts to life for prominent radio networks, respected artists, and high-profile clients.`;
+    return `An experienced sound engineer and audio producer based in Dubai, U.A.E with over ${getYearsOfExperience()} years of expertise in sound design, music production, and a udio post-production. The journey in the audio industry beg an in 2001 as a beat maker and hip-hop producer, evolving i nto a diverse and fulfilling career spanning radio imaging, in-store radio, TV commercials, and music production. Privil eged to collaborate with prominent radio stations, high-prof ile brands, and talented artists, consistently delivering creative and high-quality soundscapes that bring ideas to life.'`;
   },
   profileImage: '/image/profile.jpg',
 };
