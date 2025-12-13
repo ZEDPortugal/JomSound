@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { motion } from 'framer-motion';
-import { FaEnvelope, FaPhone, FaRegCopyright, FaInstagram, FaSoundcloud, FaLinkedin } from 'react-icons/fa';
+import { FaEnvelope, FaPhone, FaRegCopyright, FaInstagram, FaSoundcloud, FaLinkedin, FaWhatsapp} from 'react-icons/fa';
 import { HiLocationMarker } from 'react-icons/hi';
 import { SITE_CONFIG, SOCIAL_LINKS } from '../constants';
 
