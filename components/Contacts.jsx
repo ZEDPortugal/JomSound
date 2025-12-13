@@ -138,14 +138,14 @@ const Contacts = () => {
                 icon={HiLocationMarker}
                 title="Based in"
                 value="Manila, Philippines"
-                href="#"
+                href="https://maps.app.goo.gl/XD2zboLFapLmTAQv6"
                 index={3}
               />
               <ContactCard
                 icon={HiLocationMarker}
                 title="Currently in"
                 value="Dubai, U.A.E"
-                href="#"
+                href="https://maps.app.goo.gl/7xPrkLmGpyEoWi5p6"
                 index={4}
               />
             </div>
