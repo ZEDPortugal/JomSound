@@ -7,7 +7,7 @@ import { SiProtools } from 'react-icons/si';
 import { ABOUT_INFO, PRODUCTION_TOOLS } from '../constants';
 
 // Calculate years of experience dynamically
-const CAREER_START_YEAR = 2001;
+const CAREER_START_YEAR = 2005;
 const getYearsOfExperience = () => new Date().getFullYear() - CAREER_START_YEAR;
 
 const ToolCard = ({ tool, index }) => {
