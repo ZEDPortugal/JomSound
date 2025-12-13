@@ -121,8 +121,7 @@ const Contacts = () => {
               icon={FaWhatsapp}
               title="WhatsApp (UAE)"
               value={SITE_CONFIG.phone}
-              href={'https://wa.me/' + SITE_CONFIG.phone.replace
-(\s/g, '').replace(/^\+/,'')}
+              href={'https://wa.me/' + SITE_CONFIG.phone.replace(\s/g,'').replace(/^\+/,'')}
                 index={1}
               />
               <ContactCard
