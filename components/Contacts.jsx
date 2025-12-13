@@ -118,8 +118,8 @@ const Contacts = () => {
                 index={0}
               />
               <ContactCard
-                icon={FaPhone}
-                title="Phone (UAE)"
+                icon={FaWhatsapp}
+                title="WhatsApp (UAE)"
                 value={SITE_CONFIG.phone}
                 href={'tel:' + SITE_CONFIG.phone.replace(/\s/g, '')}
                 index={1}
