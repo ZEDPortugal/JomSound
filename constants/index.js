@@ -62,7 +62,7 @@ const getYearsOfExperience = () => new Date().getFullYear() - CAREER_START_YEAR;
 export const ABOUT_INFO = {
   title: 'About Me',
   get description() {
-    return `An experienced sound engineer and audio producer based in Dubai, U.A.E with over ${getYearsOfExperience()} years of expertise in sound design, music production, and a udio post-production. The journey in the audio industry beg an in 2001 as a beat maker and hip-hop producer, evolving i nto a diverse and fulfilling career spanning radio imaging, in-store radio, TV commercials, and music production. Privil eged to collaborate with prominent radio stations, high-prof ile brands, and talented artists, consistently delivering creative and high-quality soundscapes that bring ideas to life.'`;
+    return `An experienced sound engineer and audio producer based in Dubai, U.A.E with over ${getYearsOfExperience()} years of expertise in sound design, music production, and a udio post-production. The journey in the audio industry beg an in 2001 as a beat maker and hip-hop producer, evolving i nto a diverse and fulfilling career spanning radio imaging, in-store radio, TV commercials, and music production. Privil eged to collaborate with prominent radio stations, high-prof ile brands, and talented artists, consistently delivering creative and high-quality soundscapes that bring ideas to life.`;
   },
   profileImage: '/image/profile.jpg',
 };
